@@ -46,7 +46,8 @@ fn looper (buffer: *[1024]u8, allocator: std.mem.Allocator) !void{
 		input = (try stdin.reader().readUntilDelimiterOrEof(buffer, '\n')).?;
 		if (input.len<1) {
 			continue;
-		} else if (std.mem.eql(u8, "exit", input)){
+		} else if (std.mem.eql(u8, "exit", input) or std.mem.eql(u8, "quit", input)){
+			try stdout.writer().print("Goodbye, my friend.\n",.{});
 			return;
 		} 
 		splitted = split(input);
