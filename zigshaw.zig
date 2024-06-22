@@ -11,6 +11,7 @@ pub fn main() !void{
 	const allocator = gpa.allocator();
 	var buffer: [1024]u8 = undefined;
 
+	// Remind the programmer, who most likely has no connection to the outside world, what time and date it is
 	var date_child = std.process.Child.init(&[_][]const u8{"date"}, allocator);
 	_ = try date_child.spawnAndWait();
 	// Main loop
