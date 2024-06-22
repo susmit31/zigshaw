@@ -19,7 +19,8 @@ pub fn main() !void{
 	try looper(&buffer, allocator);
 }
 
-// Split input command into argv
+// Split input command into argv with the standard library
+// Caveat: doesn't know of quotes
 fn split (str: []const u8) [][]const u8 {
 	var splitted_arr: [1024][]const u8 = undefined;
 
@@ -34,6 +35,7 @@ fn split (str: []const u8) [][]const u8 {
 	return splitted_arr[0..i];
 }
 
+// My own splitter. Recognizes opening and closing quotes.
 fn split2 (str: []const u8) [][]const u8 {
 	var splitted_arr: [1024][]const u8 = undefined;
 
