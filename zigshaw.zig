@@ -34,6 +34,32 @@ fn split (str: []const u8) [][]const u8 {
 	return splitted_arr[0..i];
 }
 
+fn split2 (str: []const u8) [][]const u8 {
+	var splitted_arr: [1024][]const u8 = undefined;
+
+	var curr_start: usize = 0;
+	var curr_loc: usize = 0;
+	var i: usize = 0;
+	var closed_quotes: bool = true;
+
+	while (curr_loc < str.len) : (curr_loc += 1) {
+		if (std.mem.eql(u8, str[curr_loc..curr_loc+1], " ")) {
+			if (closed_quotes) {
+				splitted_arr[i] = str[curr_start..curr_loc];
+				curr_start = curr_loc + 1;
+				i += 1;
+			}
+		} else if (std.mem.eql(u8, str[curr_loc..curr_loc+1], "\"")) {
+			closed_quotes = !closed_quotes;
+		}
+	}
+
+	splitted_arr[i] = str[curr_start..curr_loc];
+	i+=1;
+
+	return splitted_arr[0..i];
+}
+
 fn looper (buffer: *[1024]u8, allocator: std.mem.Allocator) !void{
 	var input: []const u8 = undefined;
 	var splitted: [][]const u8 = undefined;
@@ -50,8 +76,8 @@ fn looper (buffer: *[1024]u8, allocator: std.mem.Allocator) !void{
 			try stdout.writer().print("Goodbye, my friend.\n",.{});
 			return;
 		} 
-		splitted = split(input);
-
+		splitted = split2(input);
+		
 		// Spawn child process
 		var child = std.process.Child.init(splitted, allocator);
 		_ = child.spawnAndWait() catch |err| {
